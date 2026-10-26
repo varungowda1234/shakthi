@@ -1,0 +1,153 @@
+#include <stdio.h>
+#include <stdlib.h>
+
+struct node
+{
+    int data;
+    struct node *next;
+};
+
+struct node *head = NULL;
+
+void insert()
+{
+    struct node *n, *t;
+    n = malloc(sizeof(struct node));
+
+    printf("Enter stop ID: ");
+    scanf("%d", &n->data);
+
+    if (head == NULL)
+    {
+        head = n;
+        n->next = head;
+    }
+    else
+    {
+        t = head;
+        while (t->next != head)
+            t = t->next;
+
+        t->next = n;
+        n->next = head;
+    }
+}
+
+void deleteFront()
+{
+    struct node *t = head, *last;
+
+    if (head == NULL)
+    {
+        printf("List is empty\n");
+        return;
+    }
+
+    if (head->next == head)
+    {
+        free(head);
+        head = NULL;
+        return;
+    }
+
+    last = head;
+    while (last->next != head)
+        last = last->next;
+
+    head = head->next;
+    last->next = head;
+    free(t);
+}
+
+void deleteKey()
+{
+    struct node *t = head, *prev = NULL;
+    int key;
+
+    printf("Enter stop ID to delete: ");
+    scanf("%d", &key);
+
+    if (head == NULL)
+    {
+        printf("List is empty\n");
+        return;
+    }
+
+    do
+    {
+        if (t->data == key)
+        {
+            if (t == head)
+            {
+                deleteFront();
+                return;
+            }
+
+            prev->next = t->next;
+            free(t);
+            printf("Stop deleted\n");
+            return;
+        }
+
+        prev = t;
+        t = t->next;
+
+    } while (t != head);
+
+    printf("Stop not found\n");
+}
+
+void alternate()
+{
+    struct node *t = head;
+    int count = 1;
+
+    if (head == NULL)
+    {
+        printf("List is empty\n");
+        return;
+    }
+
+    printf("Alternate stops: ");
+
+    do
+    {
+        if (count % 2 != 0)
+            printf("%d ", t->data);
+
+        t = t->next;
+        count++;
+
+    } while (t != head);
+
+    printf("\n");
+}
+
+int main()
+{
+    int ch;
+
+    do
+    {
+        printf("\n1.Insert at end");
+        printf("\n2.Delete from front");
+        printf("\n3.Delete by stop ID");
+        printf("\n4.Display alternate stops");
+        printf("\n5.Exit");
+        printf("\nEnter choice: ");
+        scanf("%d", &ch);
+
+        switch (ch)
+        {
+            case 1: insert(); break;
+            case 2: deleteFront(); break;
+            case 3: deleteKey(); break;
+            case 4: alternate(); break;
+            case 5: printf("Exit\n"); break;
+            default: printf("Invalid choice\n");
+        }
+
+    } while (ch != 5);
+
+    return 0;
+}
